@@ -13,28 +13,16 @@ export default function Navbar() {
   const navItems = [
     {
       link: "/",
-      text: "Holidays",
+      text: "Home",
     },
     {
-      link: "/",
-      text: "Destinations",
-    },
-    {
-      link: "/",
-      text: "Flights",
-    },
-    {
-      link: "/",
-      text: "Offers",
-    },
-    {
-      link: "/",
-      text: "Contacts",
+      link: "/store",
+      text: "Stores",
     },
   ];
   return (
     <header className="absolute top-0 left-0 right-0 flex justify-between items-center p-6 z-50 text-white">
-      <div className="text-lg font-bold">GLOBE EXPRESS</div>
+      <div className="text-lg font-bold">COFFEE PASSPORT</div>
       <nav className="hidden md:flex gap-16 overflow-hidden">
         {navItems.map((nav: any, key: number) => (
           <div key={key}>
