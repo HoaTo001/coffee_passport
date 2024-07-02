@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Bookmark, Menu, Search, User } from "lucide-react";
+import { Bookmark, Info, Menu, Search, User } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { Suspense } from "react";
 
@@ -13,14 +13,15 @@ import {
   CarouselItem,
   CarouselNext,
   CarouselPrevious,
-  type CarouselApi,
 } from "@/components/ui/carousel";
 import Loading from "./loading";
+import { removeDots, toLowerCase } from "@/lib/string-format";
 
 interface CoffeeStore {
   name: string;
   google_map_link: string;
   address: string;
+  slug: string;
 }
 
 export default function Home() {
@@ -57,16 +58,14 @@ export default function Home() {
 
   // Handle case when stores or selectedStoreIndex might be invalid
   if (stores.length === 0 || selectedStoreIndex >= stores.length) {
-    return <Suspense fallback={<Loading />} />;
+    return <Loading />;
   }
 
   return (
     <div className="relative min-h-screen w-full bg-gray-900 text-white">
       {/* Background Image */}
       <Image
-        src={`/stores/${slugify(
-          stores[selectedStoreIndex].name
-        )}_background.jpg`}
+        src={`/stores/${stores[selectedStoreIndex].slug}_background.jpg`}
         alt="Background Image"
         layout="fill"
         objectFit="cover"
@@ -75,7 +74,7 @@ export default function Home() {
       />
 
       {/* Main Content */}
-      <main className="relative flex flex-col items-start justify-between h-full w-full pt-24 min-h-screen">
+      <div className="relative flex flex-col items-start justify-between h-full w-full pt-24 min-h-screen">
         <div className="flex items-center pl-6 w-full h-full">
           <div className="max-w-lg bg-black bg-opacity-70 rounded-md p-4">
             <h3 className="text-sm uppercase">
@@ -89,16 +88,27 @@ export default function Home() {
               tincidunt, velit ac porttitor pulvinar, tortor eros facilisis
               libero.
             </p>
-            <Link
-              href={stores[selectedStoreIndex].google_map_link}
-              passHref
-              target="_blank"
-            >
-              <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
-                <Bookmark className="w-4 h-4" />
-                Discover Location
-              </Button>
-            </Link>
+            <div className="flex items-center space-x-4">
+              <Link
+                href={`/store/${slugify(toLowerCase(removeDots(stores[selectedStoreIndex].name)))}`}
+                passHref
+              >
+                <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
+                  <Info className="w-4 h-4" />
+                  Store Detail
+                </Button>
+              </Link>
+              <Link
+                href={stores[selectedStoreIndex].google_map_link}
+                passHref
+                target="_blank"
+              >
+                <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
+                  <Bookmark className="w-4 h-4" />
+                  Discover Location
+                </Button>
+              </Link>
+            </div>
           </div>
         </div>
 
@@ -125,7 +135,7 @@ export default function Home() {
                           {store.name}
                         </span>
                       </div>
-                    </CardContent>  
+                    </CardContent>
                   </Card>
                 </CarouselItem>
               ))}
@@ -134,7 +144,7 @@ export default function Home() {
             <CarouselNext />
           </Carousel>
         </div>
-      </main>
+      </div>
     </div>
   );
 }

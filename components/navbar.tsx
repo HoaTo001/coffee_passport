@@ -21,8 +21,8 @@ export default function Navbar() {
     },
   ];
   return (
-    <header className="absolute top-0 left-0 right-0 flex justify-between items-center p-6 z-50 text-white">
-      <div className="text-lg font-bold">COFFEE PASSPORT</div>
+    <div className="absolute top-0 left-0 right-0 flex justify-between items-center p-6 z-50 text-white">
+      <div className="text-lg font-bold cursor-pointer"><Link href={'/'}>COFFEE PASSPORT</Link></div>
       <nav className="hidden md:flex gap-16 overflow-hidden">
         {navItems.map((nav: any, key: number) => (
           <div key={key}>
@@ -59,6 +59,6 @@ export default function Navbar() {
           </DropdownMenuContent>
         </DropdownMenu>
       </div>
-    </header>
+    </div>
   );
 }
