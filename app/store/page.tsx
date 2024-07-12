@@ -71,13 +71,13 @@ export default function Store() {
   return (
     <div className="relative min-h-screen w-full bg-gray-900 text-white">
       {/* Background Image */}
-      <Image
+      {/* <Image
         src={`/background/placeholder_2.jpg`}
         alt="Background Image"
         layout="fill"
         objectFit="cover"
         className="opacity-70"
-      />
+      /> */}
       <Sidebar setSearchInput={setSearchInput} />
       {/* Main Content */}
       <div className="relative flex flex-col items-start justify-between h-full w-full pt-28 pl-32 min-h-screen">

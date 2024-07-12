@@ -19,6 +19,7 @@ import { removeDots, toLowerCase } from "@/lib/string-format";
 
 interface CoffeeStore {
   name: string;
+  description: string;
   google_map_link: string;
   address: string;
   slug: string;
@@ -84,13 +85,13 @@ export default function Home() {
               {stores[selectedStoreIndex].name}
             </h1>
             <p className="mt-4 text-gray-300">
-              Mauris malesuada nisi sit amet augue accumsan tincidunt. Maecenas
-              tincidunt, velit ac porttitor pulvinar, tortor eros facilisis
-              libero.
+              {stores[selectedStoreIndex].description}
             </p>
             <div className="flex items-center space-x-4">
               <Link
-                href={`/store/${slugify(toLowerCase(removeDots(stores[selectedStoreIndex].name)))}`}
+                href={`/store/${slugify(
+                  toLowerCase(removeDots(stores[selectedStoreIndex].name))
+                )}`}
                 passHref
               >
                 <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
