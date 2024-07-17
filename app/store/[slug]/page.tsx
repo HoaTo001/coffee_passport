@@ -15,6 +15,8 @@
     CarouselNext,
     CarouselPrevious,
   } from "@/components/ui/carousel";
+import Loading from "@/app/loading";
+import { splitReviews } from "@/lib/string-format";
 
   interface CoffeeStoreDetail {
     name: string;
@@ -25,28 +27,11 @@
     slug: string;
   }
 
-  // const images = [
-  //   {
-  //     link: "/placeholder.jpg",
-  //   },
-  //   {
-  //     link: "/placeholder_2.jpg",
-  //   },
-  //   {
-  //     link: "/placeholder_3.jpg",
-  //   },
-  //   {
-  //     link: "/placeholder_4.jpg",
-  //   },
-  //   {
-  //     link: "/vertical.jpg",
-  //   },
-  // ];
-
   export default function Page({ params }: { params: { slug: string } }) {
     const [store, setStore] = useState<CoffeeStoreDetail | null>(null);
     const [selectedImageIndex, setSelectedImageIndex] = useState(0);
     const [images, setImages] = useState([]);
+    //const [reviews, setReviews] = useState([""]);
 
     React.useEffect(() => {
       const fetchData = async () => {
@@ -68,8 +53,9 @@
             const imgs = await response_images.json();
             setStore(data);
             setImages(imgs.images);
-            console.log(data);
-            console.log(imgs.images)
+            // console.log(data);
+            // console.log(imgs.images)
+            // console.log(typeof store?.review)
           } else {
             console.error("Failed to fetch data:", response.statusText);
           }
@@ -79,7 +65,15 @@
       };
       fetchData();
     }, [params.slug]);
-    
+
+    if (!store || images.length ===0)
+    {
+      return <Loading />;
+    }
+    // console.log(store.review)
+    // console.log(splitReviews(store.review));
+    const reviews = splitReviews(store.review);
+    //setReviews(splitReviews(store.review));  
     return (
       <div className="relative min-h-screen w-full bg-gray-900 text-white overflow-hidden">
         {store ? (
@@ -90,7 +84,7 @@
               layout="fill"
               object-fit="cover"
               sizes="100vw"
-              className="opacity-30"
+              className="opacity-40"
             />
             {/* Main Content */}
             <div className="relative flex flex-col lg:flex-row min-h-screen w-full gap-6">
@@ -153,28 +147,29 @@
                   </h3>
                   <h1 className="text-6xl font-bold">{store.name}</h1>
                   <p className="text-gray-300 text-center mt-4">
-                    Mauris malesuada nisi sit amet augue accumsan tincidunt.
+                    {/* Mauris malesuada nisi sit amet augue accumsan tincidunt.
                     Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros
-                    facilisis libero.
+                    facilisis libero. */}
+                    {reviews[0]}
                   </p>
                 </div>
 
-                <div className="grid grid-cols-2 w-full flex-1 gap-4 mr-4">
-                  <div className="flex flex-col items-center justify-center gap-2 border rounded  bg-black bg-opacity-50">
-                    <h1 className="text-7xl font-bold">H1</h1>
-                    <span>Mauris malesuada nisi sit amet augue</span>
+                <div className="grid grid-cols-2 w-full flex-1 gap-4 mr-4 text-center">
+                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
+                    <h3 className="text-4xl font-bold text-yellow-500">Drinks</h3>
+                    <span>{reviews[1]}</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border rounded">
-                    <h1 className="text-7xl font-bold">H1</h1>
-                    <span>Mauris malesuada nisi sit amet augue</span>
+                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
+                    <h3 className="text-4xl font-bold text-yellow-500">Service</h3>
+                    <span>{reviews[2]}</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border rounded">
-                    <h1 className="text-7xl font-bold">H1</h1>
-                    <span>Mauris malesuada nisi sit amet augue</span>
+                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
+                    <h3 className="text-4xl font-bold text-yellow-500">Atmosphere</h3>
+                    <span>{reviews[3]}</span>
                   </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border rounded">
-                    <h1 className="text-7xl font-bold">H1</h1>
-                    <span>Mauris malesuada nisi sit amet augue</span>
+                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
+                    <h3 className="text-4xl font-bold text-yellow-500">Originality</h3>
+                    <span>{reviews[4 ]}</span>
                   </div>
                 </div>
 
@@ -187,7 +182,7 @@
                   </Link>
                   <div className="flex items-center gap-1">
                     <span>4.5</span>
-                    <img
+                    <img  
                       width="32"
                       height="32"
                       src="https://img.icons8.com/fluency/48/star--v1.png"

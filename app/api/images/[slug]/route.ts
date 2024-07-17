@@ -6,7 +6,6 @@ export async function GET(
   req: Request,
   { params }: { params: { slug: string } }
 ) {
-    console.log("here");
   // Get the store slug from the URL
   const { slug } = params;
   if (!slug) {
