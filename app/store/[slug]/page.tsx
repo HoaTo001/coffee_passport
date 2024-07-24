@@ -1,203 +1,138 @@
-  "use client";
+"use client";
 
-  import { Button } from "@/components/ui/button";
-  import { Bookmark, Star } from "lucide-react";
-  import Error from "next/error";
-  import Image from "next/image";
-  import Link from "next/link";
-  import { useRouter, useSearchParams } from "next/navigation";
-  import React, { useState } from "react";
-  import { Card, CardContent } from "@/components/ui/card";
-  import {
-    Carousel,
-    CarouselContent,
-    CarouselItem,
-    CarouselNext,
-    CarouselPrevious,
-  } from "@/components/ui/carousel";
+import { Button } from "@/components/ui/button";
+import { Bookmark, ChevronLeft, ChevronRight, Star } from "lucide-react";
+import Image from "next/image";
+import Link from "next/link";
+import React, { useState } from "react";
+import {
+  Card,
+  CardDescription,
+  CardHeader,
+  CardTitle,
+} from "@/components/ui/card";
 import Loading from "@/app/loading";
 import { splitReviews } from "@/lib/string-format";
+import {prevItem, nextItem} from "@/lib/array";
 
-  interface CoffeeStoreDetail {
-    name: string;
-    google_map_link: string;
-    address: string;
-    rating: number;
-    review: string;
-    slug: string;
-  }
+interface CoffeeStoreDetail {
+  name: string;
+  google_map_link: string;
+  address: string;
+  rating: number;
+  review: string;
+  slug: string;
+}
 
-  export default function Page({ params }: { params: { slug: string } }) {
-    const [store, setStore] = useState<CoffeeStoreDetail | null>(null);
-    const [selectedImageIndex, setSelectedImageIndex] = useState(0);
-    const [images, setImages] = useState([]);
-    //const [reviews, setReviews] = useState([""]);
+export default function Page({ params }: { params: { slug: string } }) {
+  const [store, setStore] = useState<CoffeeStoreDetail | null>(null);
+  const [selectedImageIndex, setSelectedImageIndex] = useState(0);
+  const [images, setImages] = useState([]);
+  //const [reviews, setReviews] = useState([""]);
 
-    React.useEffect(() => {
-      const fetchData = async () => {
-        try {
-          const response = await fetch(`/api/stores/${params.slug}`, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-          });
-          const response_images = await fetch(`/api/images/${params.slug}`, {
-            method: "GET",
-            headers: {
-              Accept: "application/json",
-            },
-          });
-          if (response.ok) {
-            const data = await response.json();
-            const imgs = await response_images.json();
-            setStore(data);
-            setImages(imgs.images);
-            // console.log(data);
-            // console.log(imgs.images)
-            // console.log(typeof store?.review)
-          } else {
-            console.error("Failed to fetch data:", response.statusText);
-          }
-        } catch (error) {
-          console.error("Error fetching data:", error);
+  React.useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(`/api/stores/${params.slug}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        const response_images = await fetch(`/api/images/${params.slug}`, {
+          method: "GET",
+          headers: {
+            Accept: "application/json",
+          },
+        });
+        if (response.ok) {
+          const data = await response.json();
+          const imgs = await response_images.json();
+          setStore(data);
+          setImages(imgs.images);
+        } else {
+          console.error("Failed to fetch data:", response.statusText);
         }
-      };
-      fetchData();
-    }, [params.slug]);
+      } catch (error) {
+        console.error("Error fetching data:", error);
+      }
+    };
+    fetchData();
+  }, [params.slug]);
 
-    if (!store || images.length ===0)
-    {
-      return <Loading />;
-    }
-    // console.log(store.review)
-    // console.log(splitReviews(store.review));
-    const reviews = splitReviews(store.review);
-    //setReviews(splitReviews(store.review));  
-    return (
-      <div className="relative min-h-screen w-full bg-gray-900 text-white overflow-hidden">
-        {store ? (
-          <>
-            <Image
-              src={`/stores/${store.slug}_background.jpg`}
-              alt="Background Image"
-              layout="fill"
-              object-fit="cover"
-              sizes="100vw"
-              className="opacity-40"
-            />
-            {/* Main Content */}
-            <div className="relative flex flex-col lg:flex-row min-h-screen w-full gap-6">
-              {/* Image Section */}
-              <div className="hidden lg:flex flex-col flex-1 h-full pt-24 min-h-screen items-center">
-              <div className="relative flex-1 w-full h-full">
-                <Image
-                  //src={`/background${images[selectedImageIndex]}`}
-                  src={`/carousel/${store.slug}/${images[selectedImageIndex]}`}
-                  alt="Store Image"
-                  objectFit="contain"
-                  layout="fill"
-                  className="pl-4 flex-1 overflow-hidden"
-                  // width={0}
-                  // height={0}
-                  // sizes="100vh"
-                  // style={{ width: "auto", height: "auto" }}
-                />
-                </div>
-                <Carousel className="w-4/5 pt-8 pb-8">
-                  <CarouselContent>
-                    {images.map((img, index) => (
-                      <CarouselItem
-                        key={index}
-                        className="md:basis-1/2 lg:basis-1/4"
-                        onClick={() => setSelectedImageIndex(index)}
-                      >
-                        <div className="p-1">
-                          <Card className="hover:border-yellow-500 border-2 border-white">
-                            <CardContent className="relative flex aspect-square items-center justify-center group">
-                              <Image
-                                //src={`/background${img.link}`}
-                                src={`/carousel/${store.slug}/${img}`}
-                                alt="Store Image"
-                                objectFit="cover"
-                                fill
-                                className="rounded-lg overflow-hidden"
-                              />
-                              <div className="absolute inset-0 rounded-md bg-black bg-opacity-0 group-hover:bg-opacity-50 transition-opacity flex items-center justify-center text-white">
-                                <span className="text-xl text-center font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex-1">
-                                </span>
-                              </div>
-                            </CardContent>
-                          </Card>
-                        </div>
-                      </CarouselItem>
-                    ))}
-                  </CarouselContent>
-                  <CarouselPrevious />
-                  <CarouselNext />
-                </Carousel>
-              </div>
-
-              {/* Text Content */}
-              <div className="flex flex-col items-center flex-1 h-full min-h-screen pt-24 pb-4">
-                <div className="flex flex-col items-center p-8 pt-0">
-                  {/* <div className="flex flex-col max-w-lg bg-black bg-opacity-70 rounded-md p-4"> */}
-                  <h3 className="text-sm uppercase opacity-70 mb-4">
-                    {store.address}
-                  </h3>
-                  <h1 className="text-6xl font-bold">{store.name}</h1>
-                  <p className="text-gray-300 text-center mt-4">
-                    {/* Mauris malesuada nisi sit amet augue accumsan tincidunt.
-                    Maecenas tincidunt, velit ac porttitor pulvinar, tortor eros
-                    facilisis libero. */}
-                    {reviews[0]}
-                  </p>
-                </div>
-
-                <div className="grid grid-cols-2 w-full flex-1 gap-4 mr-4 text-center">
-                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
-                    <h3 className="text-4xl font-bold text-yellow-500">Drinks</h3>
-                    <span>{reviews[1]}</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
-                    <h3 className="text-4xl font-bold text-yellow-500">Service</h3>
-                    <span>{reviews[2]}</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
-                    <h3 className="text-4xl font-bold text-yellow-500">Atmosphere</h3>
-                    <span>{reviews[3]}</span>
-                  </div>
-                  <div className="flex flex-col items-center justify-center gap-2 border-2 rounded-md  bg-black bg-opacity-50 p-1">
-                    <h3 className="text-4xl font-bold text-yellow-500">Originality</h3>
-                    <span>{reviews[4 ]}</span>
-                  </div>
-                </div>
-
-                <div className="flex items-center mt-6 gap-6">
-                  <Link href={store.google_map_link} passHref target="_blank">
-                    <Button className="flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
-                      <Bookmark className="w-4 h-4" />
-                      Discover Location
-                    </Button>
-                  </Link>
-                  <div className="flex items-center gap-1">
-                    <span>4.5</span>
-                    <img  
-                      width="32"
-                      height="32"
-                      src="https://img.icons8.com/fluency/48/star--v1.png"
-                      alt="star--v1"
-                    />
-                  </div>
-                </div>
-
-                {/* </div> */}
-              </div>
-            </div>
-          </>
-        ) : (
-          <Error statusCode={404} />
-        )}
-      </div>
-    );
+  if (!store || images.length === 0) {
+    return <Loading />;
   }
+  // console.log(store.review)
+  // console.log(splitReviews(store.review));
+  const reviews = splitReviews(store.review);
+  //setReviews(splitReviews(store.review));
+  return (
+    <div className="relative min-h-screen w-full bg-gray-600 text-white overflow-hidden flex">
+      <div className="relative flex flex-1">
+        <Image
+          src={`/carousel/${store.slug}/${images[selectedImageIndex]}`}
+          alt="Store Image"
+          objectFit="cover"
+          layout="fill"
+          className="absolute left-0 brightness-75"
+          
+        />
+        <div className="absolute bottom-12 left-12 flex gap-8">
+          <Button className="border-none rounded-full box-border bg-white w-16 h-16" onClick={() => setSelectedImageIndex(prevItem(selectedImageIndex, images.length))}>
+            <ChevronLeft size={24} color="#565554"/>
+          </Button>
+          <Button className="border-none rounded-full box-border bg-white w-16 h-16" onClick={() => setSelectedImageIndex(nextItem(selectedImageIndex, images.length))}>
+            <ChevronRight size={24} color="#565554"/>
+          </Button>
+        </div>
+      </div>
+      {/* <div className="flex flex-1 bg-gradient-to-tr from-[#c2c0ba] to-[#cdcbc7] justify-center pt-24"> */}
+      <div className="flex flex-1 bg-[#c2c0ba] justify-center pt-24">
+        <div className="relative flex flex-col w-4/5 gap-6">
+          <h1 className="text-7xl text-[#9e9b96] font-bold">{store.name}</h1>
+          <span className="text-[#565554]">{store.address}</span>
+          <span className="drop-shadow-sm">{reviews[0]}</span>
+          <div className="flex items-center gap-6 mt-4">
+            <Link href={store.google_map_link} passHref target="_blank">
+              <Button className="flex items-center gap-2 px-4 py-2 bg-[#FFE8B7] text-[#565554] rounded shadow-md">
+                <Bookmark className="w-4 h-4" />
+                Discover Location
+              </Button>
+            </Link>
+            <div className="flex items-center gap-1">
+              <span>4.5</span>
+              {/* <Image
+                width="32"
+                height="32"
+                src="https://img.icons8.com/fluency/48/star--v1.png"
+                alt="star--v1"
+              /> */}
+              <Star fill="yellow" color="yellow"></Star>
+            </div>
+          </div>
+          <div className="absolute bottom-12 -left-1/3 flex gap-4">
+            <Card className="w-[254px] group text-black bg-white hover:bg-[#9A9892] hover:text-white shadow-lg border-none ease-in duration-300 hover:scale-105">
+              <CardHeader className="h-full flex flex-col justify-between">
+                <CardDescription className="text-[#565554] text-[15px] group-hover:text-white ease-in duration-300">{reviews[1]}</CardDescription>
+                <CardTitle className="text-lg text-[#C0B59A] group-hover:text-[#FFE8B7] ease-in duration-300">Drinks</CardTitle>
+              </CardHeader>
+            </Card>
+            <Card className="w-[254px] group text-black bg-white hover:bg-[#9A9892] hover:text-white shadow-lg border-none ease-in duration-300 hover:scale-105">
+              <CardHeader className="h-full flex flex-col justify-between">
+                <CardDescription className="text-[#565554] text-[15px] group-hover:text-white ease-in duration-300">{reviews[2]}</CardDescription>
+                <CardTitle className="text-lg text-[#C0B59A] group-hover:text-[#FFE8B7] ease-in duration-300">Service</CardTitle>
+              </CardHeader>
+            </Card>
+            <Card className="w-[254px] group text-black bg-white hover:bg-[#9A9892] hover:text-white shadow-lg border-none ease-in duration-300 hover:scale-105">
+              <CardHeader className="h-full flex flex-col justify-between">
+                <CardDescription className="text-[#565554] text-[15px] group-hover:text-white ease-in duration-300">{reviews[3]}</CardDescription>
+                <CardTitle className="text-lg text-[#C0B59A] group-hover:text-[#FFE8B7] ease-in duration-300">Atmosphere</CardTitle>
+              </CardHeader>
+            </Card>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}

@@ -3,7 +3,7 @@
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
 import Image from "next/image";
-import { Bookmark, Info } from "lucide-react";
+import { Bookmark, ChevronLeft, ChevronRight, Info } from "lucide-react";
 import { Card, CardContent } from "@/components/ui/card";
 import React, { Suspense } from "react";
 import { removeDots, toLowerCase } from "@/lib/string-format";
@@ -11,6 +11,8 @@ import ReactPaginate from "react-paginate";
 import Loading from "../loading";
 import { Input } from "@/components/ui/input";
 import Sidebar from "@/components/sidebar";
+import NextButton from "@/components/next-button";
+import PrevButton from "@/components/prev-button";
 
 interface CoffeeStore {
   name: string;
@@ -69,49 +71,51 @@ export default function Store() {
   const pageCount = Math.ceil(stores.length / storesPerPage);
 
   return (
-    <div className="relative min-h-screen w-full bg-gray-900 text-white">
+    <div className="relative min-h-screen w-full bg-gradient-to-b from-[#c2c0ba] to-[#b4b0a9] text-white">
       {/* Background Image */}
-      <Image
+      {/* <Image
         src={`/background/background.jpg`}
         alt="Background Image"
         layout="fill"
         objectFit="cover"
         className="opacity-70"
-      />
+      /> */}
       <Sidebar setSearchInput={setSearchInput} />
       {/* Main Content */}
       <div className="relative flex flex-col items-start justify-between h-full w-full pt-28 pl-32 min-h-screen">
-      <div className="flex justify-center w-full">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full ml-16">
-          {currentStores.map((store, index) => (
-            <div key={index} className="flex items-center justify-center">
-              <Link href={`/store/${store.slug}`}>
-                <Card className="hover:border-yellow-500 border-2 border-white relative size-64 cursor-pointer">
-                  <CardContent className="relative flex aspect-square items-center justify-center group">
-                    <Image
-                      src={`/stores/${slugify(store.name)}_background.jpg`}
-                      alt="Store Image"
-                      objectFit="cover"
-                      fill
-                      className="rounded-lg overflow-hidden"
-                    />
-                    <div className="absolute inset-0 rounded-md bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-opacity flex items-center justify-center text-white">
-                      <span className="text-xl text-center font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex-1">
-                        {store.name}
-                      </span>
-                    </div>
-                  </CardContent>
-                </Card>
-              </Link>
-            </div>
-          ))}
-          </div>  
+        <div className="flex justify-center w-full">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 h-full ml-16">
+            {currentStores.map((store, index) => (
+              <div key={index} className="flex items-center justify-center">
+                <Link href={`/store/${store.slug}`}>
+                  <Card className="hover:border-[#FFE8B7] border-2 border-white relative size-64 cursor-pointer aspect-square rounded-full object-cover">
+                    <CardContent className="relative flex items-center aspect-square rounded-full object-cover justify-center group">
+                      <Image
+                        src={`/stores/${slugify(
+                          toLowerCase(removeDots(store.name))
+                        )}_background.jpg`}
+                        alt="Store Image"
+                        objectFit="cover"
+                        fill
+                        className="rounded-full overflow-hidden"
+                      />
+                      <div className="absolute inset-0 rounded-full bg-[#565554] bg-opacity-0 group-hover:bg-opacity-70 transition-opacity flex items-center justify-center text-white">
+                        <span className="text-xl text-center font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex-1">
+                          {store.name}
+                        </span>
+                      </div>
+                    </CardContent>
+                  </Card>
+                </Link>
+              </div>
+            ))}
+          </div>
         </div>
 
         <div className="flex justify-center w-full py-4">
           <ReactPaginate
-            previousLabel={"Previous"}
-            nextLabel={"Next"}
+            previousLabel={<PrevButton />}
+            nextLabel={<NextButton />}
             breakLabel={"..."}
             breakClassName={"break-me"}
             pageCount={pageCount}
@@ -121,10 +125,10 @@ export default function Store() {
             containerClassName={"pagination"}
             activeClassName={"active"}
             className="flex items-center space-x-2"
-            activeLinkClassName="bg-yellow-500 text-black rounded px-2 py-1"
-            pageLinkClassName="hover:bg-yellow-500 bg-gray-700 text-white rounded px-2 py-1"
-            previousLinkClassName="hover:bg-yellow-500 bg-gray-700 text-white rounded px-2 py-1"
-            nextLinkClassName="hover:bg-yellow-500 bg-gray-700 text-white rounded px-2 py-1"
+            activeLinkClassName="bg-[#FFE8B7] text-black rounded px-2 py-1"
+            pageLinkClassName="hover:bg-[#FFE8B7] text-[#565554] rounded px-2 py-1"
+            // previousLinkClassName="hover:bg-yellow-500 bg-gray-700 text-white rounded px-2 py-1"
+            // nextLinkClassName="hover:bg-yellow-500 bg-gray-700 text-white rounded px-2 py-1"
           />
         </div>
       </div>

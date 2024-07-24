@@ -28,7 +28,7 @@ export default function Navbar() {
           <div key={key}>
             <Link
               href={nav.link}
-              className="cursor-pointer border-b-4 border-transparent hover:border-yellow-500 transition-colors duration-300"
+              className="cursor-pointer border-b-4 text-white font-bold drop-shadow-sm border-transparent hover:border-[#FFE8B7] transition-colors duration-300"
             >
               {nav.text}
             </Link>

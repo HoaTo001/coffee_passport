@@ -11,8 +11,8 @@ import {
   Carousel,
   CarouselContent,
   CarouselItem,
-  CarouselNextChevron,
-  CarouselPreviousChevron,
+  CarouselNext,
+  CarouselPrevious,
 } from "@/components/ui/carousel";
 import Loading from "./loading";
 import { removeDots, toLowerCase } from "@/lib/string-format";
@@ -77,14 +77,14 @@ export default function Home() {
       {/* Main Content */}
       <div className="relative flex flex-col items-start justify-between h-full w-full pt-24 min-h-screen">
         <div className="flex items-center pl-6 w-full h-full">
-          <div className="flex flex-col max-w-[600px] bg-[#c2c0ba] rounded-md p-4 gap-6 shadow-lg">
-            <h1 className="text-6xl text-[#9e9b96] font-bold">
-              {stores[selectedStoreIndex].name}
-            </h1>
-            <h3 className="text-sm text-[#565554]">
+          <div className="max-w-lg bg-black bg-opacity-100 rounded-md p-4">
+            <h3 className="text-sm uppercase">
               {stores[selectedStoreIndex].address}
             </h3>
-            <p className="drop-shadow-sm">
+            <h1 className="text-6xl font-bold">
+              {stores[selectedStoreIndex].name}
+            </h1>
+            <p className="mt-4 text-gray-300">
               {stores[selectedStoreIndex].description}
             </p>
             <div className="flex items-center space-x-4">
@@ -94,7 +94,7 @@ export default function Home() {
                 )}`}
                 passHref
               >
-                <Button className="mt-3 flex items-center gap-2 px-4 py-2 bg-[#FFE8B7] text-[#565554] rounded shadow-md">
+                <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
                   <Info className="w-4 h-4" />
                   Store Detail
                 </Button>
@@ -104,7 +104,7 @@ export default function Home() {
                 passHref
                 target="_blank"
               >
-                <Button className="mt-3 flex items-center gap-2 px-4 py-2 bg-[#FFE8B7] text-[#565554] rounded shadow-md">
+                <Button className="mt-6 flex items-center gap-2 px-4 py-2 bg-yellow-500 text-black rounded">
                   <Bookmark className="w-4 h-4" />
                   Discover Location
                 </Button>
@@ -113,8 +113,8 @@ export default function Home() {
           </div>
         </div>
 
-        <div className="flex h-full w-full pl-[800px] pb-12">
-          <Carousel className="w-full max-w-[600px]">
+        <div className="flex h-full w-full pl-[800px] pb-20">
+          <Carousel className="w-full max-w-lg">
             <CarouselContent>
               {stores.map((store, index) => (
                 <CarouselItem
@@ -122,16 +122,16 @@ export default function Home() {
                   className="md:basis-1/2 lg:basis-1/3"
                   onClick={() => handleStoreSelect(index)}
                 >
-                  <Card className="hover:border-[#FFE8B7] border-2 border-white cursor-pointer aspect-square rounded-full object-cover">
-                    <CardContent className="relative flex items-center aspect-square rounded-full object-cover justify-center group">
+                  <Card className="hover:border-yellow-500 border-2 border-white">
+                    <CardContent className="relative flex aspect-square items-center justify-center group">
                       <Image
-                        src={`/stores/${slugify(toLowerCase(removeDots(store.name)))}_background.jpg`}
+                        src={`/stores/${slugify(store.name)}_background.jpg`}
                         alt="Store Image"
                         objectFit="cover"
                         fill
-                        className="rounded-full overflow-hidden"
+                        className="rounded-lg overflow-hidden"
                       />
-                      <div className="absolute inset-0 bg-[#565554] bg-opacity-0 group-hover:bg-opacity-90 transition-opacity flex items-center justify-center text-white aspect-square rounded-full object-cover">
+                      <div className="absolute inset-0 rounded-md bg-black bg-opacity-0 group-hover:bg-opacity-70 transition-opacity flex items-center justify-center text-white">
                         <span className="text-xl text-center font-semibold opacity-0 group-hover:opacity-100 transition-opacity flex-1">
                           {store.name}
                         </span>
@@ -141,10 +141,8 @@ export default function Home() {
                 </CarouselItem>
               ))}
             </CarouselContent>
-            {/* <CarouselPrevious /> */}
-            {/* <CarouselNext /> */}
-            <CarouselPreviousChevron />
-            <CarouselNextChevron />
+            <CarouselPrevious />
+            <CarouselNext />
           </Carousel>
         </div>
       </div>
