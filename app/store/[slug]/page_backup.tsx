@@ -186,12 +186,6 @@ export default function Page({ params }: { params: { slug: string } }) {
                 </Link>
                 <div className="flex items-center gap-1">
                   <span>4.5</span>
-                  <img
-                    width="32"
-                    height="32"
-                    src="https://img.icons8.com/fluency/48/star--v1.png"
-                    alt="star--v1"
-                  />
                 </div>
               </div>
 
